@@ -1,35 +1,56 @@
 type Asset @entity {
   id: ID!
-  tokenAddress: Bytes!
-  totalSupply: BigInt!
+  issuer: Bytes!
+  reserveAsset: Bytes!
+  assetToken: Bytes!
+  vault: Bytes!
+  maxSupply: BigInt!
+  metadataURI: String!
+  active: Boolean!
+  createdAtBlock: BigInt!
+  createdAtTimestamp: BigInt!
 }
 
 type VaultPosition @entity {
   id: ID!
   user: Bytes!
+  vault: Bytes!
   deposited: BigInt!
+  assetTokenMinted: BigInt!
+  createdAtBlock: BigInt!
+  updatedAtTimestamp: BigInt!
 }
 
 type Proposal @entity {
   id: ID!
+  proposalId: BigInt!
   proposer: Bytes!
   description: String!
   state: String!
+  forVotes: BigInt!
+  againstVotes: BigInt!
+  abstainVotes: BigInt!
+  createdAtBlock: BigInt!
+  createdAtTimestamp: BigInt!
 }
 
 type Vote @entity {
   id: ID!
   proposal: Proposal!
   voter: Bytes!
-  support: Boolean!
+  support: Int!
   weight: BigInt!
+  reason: String!
+  createdAtBlock: BigInt!
+  createdAtTimestamp: BigInt!
 }
 
 type Swap @entity {
   id: ID!
   trader: Bytes!
-  tokenIn: Bytes!
-  tokenOut: Bytes!
   amountIn: BigInt!
   amountOut: BigInt!
+  isTokenA: Boolean!
+  timestamp: BigInt!
+  blockNumber: BigInt!
 }

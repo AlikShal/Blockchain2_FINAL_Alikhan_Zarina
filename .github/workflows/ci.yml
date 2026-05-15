@@ -2,8 +2,6 @@ name: ci
 
 on:
   push:
-    branches:
-      - main
   pull_request:
 
 jobs:
@@ -21,11 +19,32 @@ jobs:
       - name: Install Node dependencies
         run: npm ci
 
+      - name: Install frontend dependencies
+        run: npm ci --prefix frontend
+
+      - name: Install subgraph dependencies
+        run: npm ci --prefix subgraph
+
       - name: Setup Foundry
         uses: foundry-rs/foundry-toolchain@v1
 
       - name: Check formatting
         run: forge fmt --check
+
+      - name: Lint Solidity
+        run: npm run lint:sol
+
+      - name: Check frontend formatting
+        run: npm run format:check --prefix frontend
+
+      - name: Build frontend
+        run: npm run build --prefix frontend
+
+      - name: Generate subgraph types
+        run: npm run codegen --prefix subgraph
+
+      - name: Build subgraph
+        run: npm run build --prefix subgraph
 
       - name: Build
         run: forge build

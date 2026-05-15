@@ -1,33 +1,21 @@
-# Access Control Case Study
+# Access-Control Case Study
+
+The repository includes a reproduced access-control takeover and a hardened replacement in `test/OracleAndSecurity.t.sol`.
 
 ## Vulnerable Pattern
 
-`test/OracleAndSecurity.t.sol` includes `VulnerableAccessControl`, where any caller can replace `admin`. This allows an attacker to take over privileged actions.
-
-Covered by:
-
-- `testVulnerableAccessControlCanBeTakenOver`
+- Contract: `VulnerableAccessControl`
+- Issue: `setAdmin()` is callable by anyone
+- Effect: attacker promotes self to admin and can mutate privileged state
 
 ## Hardened Pattern
 
-`HardenedAccessControl` uses OpenZeppelin `AccessControl` and restricts privileged updates to `OPERATOR_ROLE`.
+- Contract: `HardenedAccessControl`
+- Fixes:
+  - uses OpenZeppelin `AccessControl`
+  - gates privileged action behind `OPERATOR_ROLE`
 
-Covered by:
+## Test Evidence
 
-- `testHardenedAccessControlBlocksUnauthorizedUser`
-- `testHardenedAccessControlAllowsOperator`
-
-## Protocol Application
-
-The protocol uses explicit roles:
-
-- `DEFAULT_ADMIN_ROLE`
-- `ISSUER_ADMIN_ROLE`
-- `ISSUER_ROLE`
-- `PAUSER_ROLE`
-- `UPGRADER_ROLE`
-- `MINTER_ROLE`
-- `BURNER_ROLE`
-- `URI_MANAGER_ROLE`
-
-This keeps issuance, pause control, upgrades, and token mint/burn authority separated.
+- Takeover succeeds in vulnerable variant: `testVulnerableAccessControlCanBeTakenOver`
+- Unauthorized call fails in hardened variant: `testHardenedAccessControlBlocksUnauthorizedUser`

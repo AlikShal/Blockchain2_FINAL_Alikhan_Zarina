@@ -1,22 +1,23 @@
-# Frontend Skeleton
+# Frontend dApp
 
-This directory will hold the exam-required dApp.
+This frontend is a Vite + React + Wagmi dashboard for the `Option C` RWA tokenization flow.
 
-Minimum UI features to implement:
-- wallet connection
-- wrong-network detection
-- asset token balance
-- governance voting power
-- delegate address
-- protocol-specific state
-- deposit action
-- swap action
-- vote action
-- proposal state page
-- one page backed by The Graph data
+Implemented flows:
 
-Recommended stack:
-- React
-- Viem
-- Wagmi
-- Vite
+- MetaMask wallet connection
+- Wrong-network detection with switch prompt for Base Sepolia
+- Read token balance, delegated voting power, delegate address, vault shares, vault reserve balance, and AMM reserves
+- Write transactions for `delegate`, `deposit`, `swapAForB`, and `castVote`
+- Proposal feed sourced from the subgraph endpoint
+- Human-readable error handling for rejected transactions and common wallet/RPC failures
+
+Setup:
+
+```bash
+cd frontend
+npm install
+copy .env.example .env
+npm run dev
+```
+
+Required environment variables are listed in `.env.example`.

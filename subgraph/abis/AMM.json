@@ -1,0 +1,13 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "swapper", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amountIn", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amountOut", "type": "uint256" },
+      { "indexed": false, "internalType": "bool", "name": "isTokenA", "type": "bool" }
+    ],
+    "name": "Swap",
+    "type": "event"
+  }
+]

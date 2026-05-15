@@ -32,7 +32,7 @@ contract GovernanceTokenTest is Test {
         address[] memory proposers = new address[](0);
         address[] memory executors = new address[](1);
         executors[0] = address(0);
-        timelock = new TimelockController(1, proposers, executors, address(this));
+        timelock = new TimelockController(2 days, proposers, executors, address(this));
         governor = new ProtocolGovernor(govToken, timelock);
         target = new TimelockTarget();
 
@@ -67,10 +67,24 @@ contract GovernanceTokenTest is Test {
 
     function testGovernorParameters() public view {
         assertEq(governor.name(), "ProtocolGovernor");
-        assertEq(governor.votingDelay(), 1);
-        assertEq(governor.proposalThreshold(), 0);
-        assertEq(governor.quorumNumerator(), 4);
+        assertEq(governor.votingDelay(), governor.VOTING_DELAY_BLOCKS());
+        assertEq(governor.votingPeriod(), governor.VOTING_PERIOD_BLOCKS());
+        assertEq(governor.proposalThreshold(), governor.PROPOSAL_THRESHOLD());
+        assertEq(governor.quorumNumerator(), governor.QUORUM_PERCENT());
         assertTrue(governor.supportsInterface(0x01ffc9a7));
+    }
+
+    function testTimelockDelayMatchesSpec() public view {
+        assertEq(timelock.getMinDelay(), 2 days);
+    }
+
+    function testGovernorOwnsTimelockRoles() public view {
+        assertTrue(timelock.hasRole(timelock.PROPOSER_ROLE(), address(governor)));
+        assertTrue(timelock.hasRole(timelock.CANCELLER_ROLE(), address(governor)));
+    }
+
+    function testProposalThresholdMatchesOnePercentOfInitialSupply() public view {
+        assertEq(governor.proposalThreshold(), 10_000 * 10 ** 18);
     }
 
     function testNonOwnerCannotMintGovernanceToken() public {
@@ -82,6 +96,7 @@ contract GovernanceTokenTest is Test {
     function testFullGovernorTimelockExecution() public {
         vm.prank(user1);
         govToken.delegate(user1);
+        vm.roll(block.number + 1);
 
         address[] memory targets = new address[](1);
         uint256[] memory values = new uint256[](1);
@@ -111,6 +126,7 @@ contract GovernanceTokenTest is Test {
     function testGovernorRejectsBeforeVotingStarts() public {
         vm.prank(user1);
         govToken.delegate(user1);
+        vm.roll(block.number + 1);
 
         address[] memory targets = new address[](1);
         uint256[] memory values = new uint256[](1);

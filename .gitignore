@@ -4,13 +4,20 @@ out/
 
 # Node
 node_modules/
-package-lock.json
 yarn.lock
+frontend/node_modules/
+frontend/dist/
+subgraph/node_modules/
+subgraph/generated/
+subgraph/build/
+subgraph/.graphclient/
 
 # Environment
 .env
 .env.local
 .env.*.local
+frontend/.env
+subgraph/.env
 
 # IDE
 .vscode/

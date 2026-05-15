@@ -1,28 +1,19 @@
 # Slither Findings
 
-## Command
+Command used:
 
 ```bash
 slither . --filter-paths "lib|node_modules|out|cache" --exclude solc-version
 ```
 
-## Latest Local Result
-
-Date: 2026-05-08
-
 Result:
 
-```text
-INFO:Slither:. analyzed (66 contracts with 100 detectors), 0 result(s) found
-```
+- Contracts analyzed: 66
+- High severity findings: 0
+- Medium severity findings: 0
+- Low severity findings: 0
+- Informational findings: 0 reported by Slither on the analyzed snapshot
 
-## High and Medium Findings
+Notes:
 
-| Severity | Count | Status |
-| --- | ---: | --- |
-| High | 0 | Clean |
-| Medium | 0 | Clean |
-
-## Notes
-
-The CI workflow also runs Slither through `crytic/slither-action`. The local command filters generated dependencies and build artifacts so that the result focuses on project contracts.
+- Foundry may still emit a `block.timestamp` lint warning in `PriceOracle.sol`, but this is a documented staleness check rather than unsafe randomness.

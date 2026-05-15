@@ -48,11 +48,16 @@ contract ProtocolGovernor is
     GovernorVotesQuorumFraction,
     GovernorTimelockControl
 {
+    uint48 public constant VOTING_DELAY_BLOCKS = 43_200;
+    uint32 public constant VOTING_PERIOD_BLOCKS = 302_400;
+    uint256 public constant PROPOSAL_THRESHOLD = 10_000 * 10 ** 18;
+    uint256 public constant QUORUM_PERCENT = 4;
+
     constructor(IVotes token, TimelockController timelock)
         Governor("ProtocolGovernor")
-        GovernorSettings(1, 45_818, 0)
+        GovernorSettings(VOTING_DELAY_BLOCKS, VOTING_PERIOD_BLOCKS, PROPOSAL_THRESHOLD)
         GovernorVotes(token)
-        GovernorVotesQuorumFraction(4)
+        GovernorVotesQuorumFraction(QUORUM_PERCENT)
         GovernorTimelockControl(timelock)
     {}
 

@@ -144,7 +144,7 @@ contract FuzzAndInvariantTest is StdInvariant, Test {
         GovernanceToken governanceToken = new GovernanceToken();
         address voter = address(0x600D);
 
-        governanceToken.transfer(voter, amount);
+        assertTrue(governanceToken.transfer(voter, amount));
         vm.prank(voter);
         governanceToken.delegate(voter);
 

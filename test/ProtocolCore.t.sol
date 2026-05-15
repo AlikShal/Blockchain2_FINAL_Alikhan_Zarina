@@ -113,6 +113,10 @@ contract ProtocolCoreTest is Test {
         receipt.mint(issuer, tokenId, 6, "");
     }
 
+    function testErc1155ReceiptFallsBackToBaseUriWhenUnset() public view {
+        assertEq(receipt.uri(999), "ipfs://base/");
+    }
+
     function testRegistryUpgradeToV2() public {
         AssetRegistryV2 v2 = new AssetRegistryV2();
         registry.upgradeTo(address(v2));

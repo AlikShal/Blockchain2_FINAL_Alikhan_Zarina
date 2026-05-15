@@ -1,4 +1,101 @@
 specVersion: 1.0.0
+indexerHints:
+  prune: auto
 schema:
   file: ./schema.graphql
-dataSources: []
+dataSources:
+  - kind: ethereum
+    name: AssetRegistry
+    network: base-sepolia
+    source:
+      address: "0x0000000000000000000000000000000000000001"
+      abi: AssetRegistry
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Asset
+      abis:
+        - name: AssetRegistry
+          file: ./abis/AssetRegistry.json
+      eventHandlers:
+        - event: AssetRegistered(indexed bytes32,indexed address,address,address,address,uint256,string)
+          handler: handleAssetRegistered
+        - event: AssetActiveSet(indexed bytes32,bool)
+          handler: handleAssetActiveSet
+      file: ./src/protocol.ts
+  - kind: ethereum
+    name: AssetVault
+    network: base-sepolia
+    source:
+      address: "0x0000000000000000000000000000000000000002"
+      abi: AssetVault
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - VaultPosition
+      abis:
+        - name: AssetVault
+          file: ./abis/AssetVault.json
+      eventHandlers:
+        - event: DepositRecorded(indexed address,uint256)
+          handler: handleDepositRecorded
+        - event: WithdrawalRecorded(indexed address,uint256)
+          handler: handleWithdrawalRecorded
+        - event: TokensMinted(indexed address,uint256)
+          handler: handleTokensMinted
+      file: ./src/protocol.ts
+  - kind: ethereum
+    name: AMM
+    network: base-sepolia
+    source:
+      address: "0x0000000000000000000000000000000000000003"
+      abi: AMM
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Swap
+      abis:
+        - name: AMM
+          file: ./abis/AMM.json
+      eventHandlers:
+        - event: Swap(indexed address,uint256,uint256,bool)
+          handler: handleSwap
+      file: ./src/protocol.ts
+  - kind: ethereum
+    name: ProtocolGovernor
+    network: base-sepolia
+    source:
+      address: "0x0000000000000000000000000000000000000004"
+      abi: ProtocolGovernor
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Proposal
+        - Vote
+      abis:
+        - name: ProtocolGovernor
+          file: ./abis/ProtocolGovernor.json
+      eventHandlers:
+        - event: ProposalCreated(uint256,address,address[],uint256[],string[],bytes[],uint256,uint256,string)
+          handler: handleProposalCreated
+        - event: ProposalCanceled(uint256)
+          handler: handleProposalCanceled
+        - event: ProposalQueued(uint256,uint256)
+          handler: handleProposalQueued
+        - event: ProposalExecuted(uint256)
+          handler: handleProposalExecuted
+        - event: VoteCast(indexed address,uint256,uint8,uint256,string)
+          handler: handleVoteCast
+      file: ./src/protocol.ts

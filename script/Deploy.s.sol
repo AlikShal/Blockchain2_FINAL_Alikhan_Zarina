@@ -15,8 +15,11 @@ import "../src/VaultFactory.sol";
 import "../src/mocks/MockERC20.sol";
 
 contract Deploy is Script {
+    address private deployer;
+
     function run() external {
         uint256 deployerKey = vm.envUint("PRIVATE_KEY");
+        deployer = vm.addr(deployerKey);
 
         vm.startBroadcast(deployerKey);
 
@@ -31,19 +34,18 @@ contract Deploy is Script {
         address[] memory proposers = new address[](0);
         address[] memory executors = new address[](1);
         executors[0] = address(0);
-        TimelockController timelock = new TimelockController(1 days, proposers, executors, msg.sender);
+        TimelockController timelock = new TimelockController(2 days, proposers, executors, deployer);
         ProtocolGovernor governor = new ProtocolGovernor(governanceToken, timelock);
 
         AssetRegistry registryImplementation = new AssetRegistry();
         ERC1967Proxy registryProxy =
-            new ERC1967Proxy(address(registryImplementation), abi.encodeCall(AssetRegistry.initialize, (msg.sender)));
+            new ERC1967Proxy(address(registryImplementation), abi.encodeCall(AssetRegistry.initialize, (deployer)));
         AssetRegistry registry = AssetRegistry(address(registryProxy));
 
-        timelock.grantRole(timelock.PROPOSER_ROLE(), address(governor));
-        timelock.grantRole(timelock.CANCELLER_ROLE(), address(governor));
-        assetToken.grantRole(assetToken.MINTER_ROLE(), address(assetVault));
-        assetToken.grantRole(assetToken.BURNER_ROLE(), address(assetVault));
-        assetToken.transferOwnership(address(assetVault));
+        _configureTimelock(timelock, governor);
+        _handoffRegistryAdmin(registry, timelock);
+        _handoffAssetTokenAdmin(assetToken, assetVault, timelock);
+        governanceToken.transferOwnership(address(timelock));
 
         vm.stopBroadcast();
 
@@ -57,5 +59,34 @@ contract Deploy is Script {
         console2.log("Timelock:", address(timelock));
         console2.log("AssetRegistry:", address(registry));
         console2.log("VaultFactory:", address(vaultFactory));
+    }
+
+    function _configureTimelock(TimelockController timelock, ProtocolGovernor governor) internal {
+        timelock.grantRole(timelock.PROPOSER_ROLE(), address(governor));
+        timelock.grantRole(timelock.CANCELLER_ROLE(), address(governor));
+        timelock.renounceRole(timelock.TIMELOCK_ADMIN_ROLE(), deployer);
+    }
+
+    function _handoffRegistryAdmin(AssetRegistry registry, TimelockController timelock) internal {
+        registry.grantRole(registry.DEFAULT_ADMIN_ROLE(), address(timelock));
+        registry.grantRole(registry.UPGRADER_ROLE(), address(timelock));
+        registry.grantRole(registry.ISSUER_ADMIN_ROLE(), address(timelock));
+        registry.grantRole(registry.PAUSER_ROLE(), address(timelock));
+        registry.renounceRole(registry.UPGRADER_ROLE(), deployer);
+        registry.renounceRole(registry.ISSUER_ADMIN_ROLE(), deployer);
+        registry.renounceRole(registry.PAUSER_ROLE(), deployer);
+        registry.renounceRole(registry.DEFAULT_ADMIN_ROLE(), deployer);
+    }
+
+    function _handoffAssetTokenAdmin(AssetToken assetToken, AssetVault assetVault, TimelockController timelock)
+        internal
+    {
+        assetToken.grantRole(assetToken.DEFAULT_ADMIN_ROLE(), address(timelock));
+        assetToken.grantRole(assetToken.MINTER_ROLE(), address(assetVault));
+        assetToken.grantRole(assetToken.BURNER_ROLE(), address(assetVault));
+        assetToken.renounceRole(assetToken.MINTER_ROLE(), deployer);
+        assetToken.renounceRole(assetToken.BURNER_ROLE(), deployer);
+        assetToken.renounceRole(assetToken.DEFAULT_ADMIN_ROLE(), deployer);
+        assetToken.transferOwnership(address(timelock));
     }
 }

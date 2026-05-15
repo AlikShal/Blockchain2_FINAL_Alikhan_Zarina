@@ -1,97 +1,189 @@
-# Architecture Report
+# Option C Architecture
 
-## Scenario
+## 1. System Overview
 
-The final scenario is `Option C - RWA Tokenization Platform`.
+The project implements `Option C — RWA Tokenization Platform` as a modular protocol with five main surfaces:
 
-The protocol tokenizes real-world assets through a registry, reserve-backed ERC4626 vaults, ERC20 asset tokens, ERC1155 asset receipts, governance, oracle pricing, and an AMM for secondary liquidity.
+1. Asset onboarding through an upgradeable `AssetRegistry`
+2. Reserve-backed minting and redemption through `AssetVault`
+3. Secondary market trading through a custom constant-product `AMM`
+4. Protocol governance through `GovernanceToken + ProtocolGovernor + TimelockController`
+5. Off-chain indexing and presentation through `The Graph` subgraph and the React frontend
 
-## Contract Set
+## 2. Component Responsibilities
 
-| Contract | Role |
+| Component | Responsibility |
 | --- | --- |
-| `GovernanceToken` | ERC20Votes governance token with ERC20Permit support. |
-| `ProtocolGovernor` | OpenZeppelin Governor module connected to a timelock. |
-| `TimelockController` | Delays approved governance execution. |
-| `AssetToken` | Fungible reserve-backed asset token. |
-| `AssetReceipt` | ERC1155 companion receipt for RWA metadata and per-asset issuance caps. |
-| `AssetRegistry` | UUPS-upgradeable registry for issuers, assets, vaults, and lifecycle state. |
-| `AssetRegistryV2` | Upgrade target proving V1 to V2 upgradeability. |
-| `AssetVault` | ERC4626 reserve vault that mints and burns `AssetToken`. |
-| `AMM` | Constant-product liquidity pool with slippage checks and `SafeERC20`. |
-| `VaultFactory` | CREATE and CREATE2 vault deployment factory. |
-| `PriceOracle` | Chainlink-compatible oracle adapter with stale-price checks. |
+| `AssetRegistry` | Registers approved RWA assets, stores issuer and token/vault metadata, supports UUPS upgrades |
+| `AssetRegistryV2` | Demonstrates the documented upgrade path from V1 to V2 |
+| `AssetToken` | ERC-20 representation of the collateral-backed asset, with role-gated mint and burn |
+| `AssetReceipt` | ERC-1155 receipt layer for issuer-side or inventory-style receipt tracking |
+| `AssetVault` | ERC-4626 reserve vault that mints and burns the asset-backed ERC-20 one-to-one against deposited collateral |
+| `AMM` | Custom CPMM with 0.3% fee, slippage protection, LP token minting, and assembly benchmark |
+| `GovernanceToken` | ERC20Votes + ERC20Permit governance token |
+| `ProtocolGovernor` | OpenZeppelin Governor stack configured for proposal lifecycle and timelock execution |
+| `VaultFactory` | CREATE and CREATE2 vault deployment factory |
+| `PriceOracle` | Chainlink-compatible price feed adapter with stale-price and invalid-round protection |
 
-## Access Model
-
-| Role | Contract | Purpose |
-| --- | --- | --- |
-| `DEFAULT_ADMIN_ROLE` | `AssetRegistry`, `AssetToken`, `AssetReceipt` | Root role administration. |
-| `ISSUER_ADMIN_ROLE` | `AssetRegistry` | Grants and revokes issuers. |
-| `ISSUER_ROLE` | `AssetRegistry`, `AssetReceipt` | Registers assets and mints receipt tokens. |
-| `PAUSER_ROLE` | `AssetRegistry` | Pauses and unpauses registered assets. |
-| `UPGRADER_ROLE` | `AssetRegistry` | Authorizes UUPS upgrades. |
-| `MINTER_ROLE` | `AssetToken` | Allows vault-backed minting. |
-| `BURNER_ROLE` | `AssetToken` | Allows vault-backed burning. |
-| `URI_MANAGER_ROLE` | `AssetReceipt` | Configures ERC1155 receipt metadata and caps. |
-
-## Contract Relationship Diagram
+## 3. High-Level Architecture
 
 ```mermaid
-flowchart TD
-    User[User / Investor]
-    Issuer[Issuer]
-    Admin[Admin / Governance Executor]
-
-    GOV[GovernanceToken<br/>ERC20Votes + Permit]
-    Governor[ProtocolGovernor]
-    Timelock[TimelockController]
-
-    Registry[AssetRegistry<br/>UUPS V1]
-    RegistryV2[AssetRegistryV2]
-    Receipt[AssetReceipt<br/>ERC1155]
-    AssetToken[AssetToken<br/>ERC20]
-    Vault[AssetVault<br/>ERC4626]
-    Factory[VaultFactory<br/>CREATE + CREATE2]
-    Oracle[PriceOracle<br/>Chainlink adapter]
-    Feed[Chainlink Feed]
-    AMM[AMM<br/>Constant Product]
-    Reserve[Reserve ERC20]
-
-    User -->|delegate votes| GOV
-    GOV -->|voting power| Governor
-    Governor -->|queues / executes| Timelock
-    Timelock -->|admin actions| Registry
-
-    Admin -->|grants roles / pauses| Registry
-    Issuer -->|registers RWA| Registry
-    Issuer -->|configures and mints receipts| Receipt
-    Factory -->|deploys| Vault
-
-    Registry -->|stores asset token + vault| AssetToken
-    Registry -->|stores vault address| Vault
-    Registry -. upgradeTo .-> RegistryV2
-
-    User -->|deposit reserve| Vault
-    Vault -->|mints / burns| AssetToken
-    Vault -->|holds| Reserve
-
-    User -->|swap| AMM
-    AMM -->|trades| AssetToken
-    AMM -->|trades| Reserve
-
-    Oracle -->|reads latestRoundData| Feed
+flowchart LR
+    Issuer --> Registry[AssetRegistry]
+    Registry --> Vault[AssetVault]
+    Vault --> AssetToken[AssetToken]
+    User --> Vault
+    User --> AMM
+    AssetToken --> AMM
+    QuoteToken --> AMM
+    GovToken[GovernanceToken] --> Governor[ProtocolGovernor]
+    Governor --> Timelock[TimelockController]
+    Timelock --> Registry
+    Timelock --> AssetToken
+    Oracle[PriceOracle] --> Frontend
+    Registry --> Subgraph
+    Vault --> Subgraph
+    AMM --> Subgraph
+    Governor --> Subgraph
+    Subgraph --> Frontend
 ```
 
-## Upgradeability Scope
+## 4. Critical User Flows
 
-Only `AssetRegistry` is UUPS-upgradeable. This keeps upgrade risk concentrated in the metadata and role-management layer while the value-moving vault, AMM, asset token, and receipt token remain non-upgradeable. `AssetRegistryV2` proves that authorized upgrades work and that unauthorized upgrades revert.
+### 4.1 Reserve Deposit and Mint
 
-## Security Assumptions
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant Reserve as Reserve Token
+    participant Vault as AssetVault
+    participant Asset as AssetToken
 
-- Issuers are permissioned through `ISSUER_ROLE`.
-- Asset pause/unpause is controlled by `PAUSER_ROLE`.
-- Vault minting and burning are role-gated on `AssetToken`.
-- AMM swaps require minimum output checks to limit slippage.
-- Oracle prices reject stale, negative, and incomplete rounds.
-- Governance execution is delayed through `TimelockController`.
+    User->>Frontend: Submit deposit amount
+    Frontend->>Reserve: approve(vault, amount)
+    Frontend->>Vault: deposit(amount, user)
+    Vault->>Reserve: transferFrom(user, vault, amount)
+    Vault->>Asset: mint(user, amount)
+    Vault-->>User: ERC4626 shares + asset-backed tokens
+```
+
+### 4.2 Asset Onboarding via Governance
+
+```mermaid
+sequenceDiagram
+    participant Proposer
+    participant Governor
+    participant Token as GovernanceToken
+    participant Timelock
+    participant Registry as AssetRegistry
+
+    Proposer->>Token: delegate(proposer)
+    Proposer->>Governor: propose(authorizeIssuer/register flow)
+    Governor-->>Proposer: proposal created
+    Proposer->>Governor: castVote
+    Governor->>Timelock: queue(proposal)
+    Timelock->>Registry: execute privileged call
+```
+
+### 4.3 Secondary Market Swap
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant Asset as AssetToken
+    participant AMM
+    participant Quote as Quote Token
+
+    User->>Frontend: Enter asset amount and min output
+    Frontend->>Asset: approve(amm, amountIn)
+    Frontend->>AMM: swapAForB(amountIn, minOut)
+    AMM->>Asset: transferFrom(user, amm, amountIn)
+    AMM->>Quote: transfer(user, amountOut)
+    AMM-->>User: swap completed
+```
+
+## 5. Storage Layout Summary
+
+### `AssetRegistry`
+
+| Slot Group | Variables | Notes |
+| --- | --- | --- |
+| Initialization | `_initialized` | One-time initializer flag for proxy deployment |
+| Registry counters | `assetCount` | Tracks total registered assets |
+| Asset storage | `_assets` | `bytes32 => AssetRecord` mapping storing issuer, reserve, token, vault, supply, URI, active flag |
+
+Upgradeable storage safety argument:
+
+- `AssetRegistryV2` only appends new behavior and does not reorder inherited state.
+- No storage variables were inserted ahead of existing `AssetRegistry` fields.
+
+### `AssetToken`
+
+| Variable | Purpose |
+| --- | --- |
+| `MINTER_ROLE` / `BURNER_ROLE` | Authorizes vault-side mint and burn actions |
+| `MAX_SUPPLY` | Hard cap on aggregate minted supply |
+
+### `AssetVault`
+
+| Variable | Purpose |
+| --- | --- |
+| `assetToken` | Linked ERC-20 minted against deposits |
+| `totalDeposited` | Tracks cumulative active collateral backing |
+| `userDeposits` | Per-user accounting for withdrawals and health checks |
+
+### `AMM`
+
+| Variable | Purpose |
+| --- | --- |
+| `tokenA` / `tokenB` | Traded pair |
+| `reserveA` / `reserveB` | CPMM reserves used for pricing |
+| `FEE_BPS` | 0.3% swap fee |
+
+### `GovernanceToken`
+
+| Variable | Purpose |
+| --- | --- |
+| `MAX_SUPPLY` | Governance cap |
+
+### `ProtocolGovernor`
+
+| Variable | Purpose |
+| --- | --- |
+| `VOTING_DELAY_BLOCKS` | One-day block delay target for Base Sepolia |
+| `VOTING_PERIOD_BLOCKS` | One-week block window target for Base Sepolia |
+| `PROPOSAL_THRESHOLD` | 1% of initial governance distribution |
+| `QUORUM_PERCENT` | 4% quorum fraction |
+
+## 6. Trust Assumptions
+
+1. The timelock is the intended long-term admin for registry and token permissions after deployment.
+2. The deployer key is temporary and must be stripped of admin power by the deployment script.
+3. Chainlink feed correctness is assumed within the stale-price window.
+4. Off-chain metadata referenced through `metadataURI` is assumed available and valid.
+5. The frontend relies on correct environment configuration for deployed addresses and subgraph URL.
+
+## 7. ADR Log
+
+### ADR-01: Use ERC-4626 for reserve accounting
+
+- Context: Option C explicitly requires a tokenized vault abstraction.
+- Options considered: custom reserve manager, ERC-4626 vault.
+- Decision: use ERC-4626 so deposits, shares, and preview semantics follow a standard interface.
+- Consequences: easier integration and stronger testing expectations around vault invariants.
+
+### ADR-02: Separate onboarding registry from vault logic
+
+- Context: issuer approvals and asset metadata are not the same concern as reserve accounting.
+- Options considered: monolithic contract, split registry + vault architecture.
+- Decision: keep onboarding state in `AssetRegistry` and financial state in `AssetVault`.
+- Consequences: clearer upgrade path and tighter permission boundaries.
+
+### ADR-03: Timelock becomes the durable admin
+
+- Context: governance must control privileged protocol actions without leaving an EOA backdoor.
+- Options considered: keep deployer as admin, transfer powers to timelock.
+- Decision: deployment script hands registry/token admin rights to `TimelockController`.
+- Consequences: slower but safer privileged changes, and a cleaner audit story.

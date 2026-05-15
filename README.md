@@ -1,25 +1,83 @@
 # Blockchain Technologies 2 Final Project
 
-This repository is being reshaped into an exam-ready `Option C - RWA Tokenization Platform`.
+This repository targets `Option C — RWA Tokenization Platform`.
 
-Current state:
-- `src/` contains the protocol contracts for governance, RWA registry, ERC4626 vaulting, AMM, oracle, factory, and UUPS upgrade path
-- `test/` contains unit, fuzz, invariant, fork-ready, security case-study, and gas benchmark coverage
-- `script/` contains deployment and post-deploy verification scripts
-- `docs/` contains the execution roadmaps, Git workflow, and deliverable plan
-- `frontend/` and `subgraph/` are scaffolded for the required dApp and indexing work
+## What Is Implemented
 
-Read these first:
-- [Master Roadmap](docs/ROADMAP_MASTER.md)
-- [Step-by-Step Roadmap](docs/ROADMAP_STEP_BY_STEP.md)
-- [Milestone Workflow](docs/MILESTONE_WORKFLOW.md)
-- [Git Workflow](docs/GIT_WORKFLOW.md)
+- Upgradeable `AssetRegistry` with documented `V1 -> V2` path
+- `AssetToken` ERC-20 with role-gated mint/burn
+- `AssetReceipt` ERC-1155 receipt layer
+- `AssetVault` ERC-4626 reserve-backed vault
+- Custom constant-product `AMM` with 0.3% fee and slippage protection
+- Chainlink-style `PriceOracle` with stale-price protection
+- `GovernanceToken` using `ERC20Votes + ERC20Permit`
+- `ProtocolGovernor + TimelockController`
+- `VaultFactory` using both CREATE and CREATE2
+- Foundry unit, fuzz, invariant, security, gas, and fork-ready tests
+- React + Wagmi frontend in `frontend/`
+- The Graph subgraph scaffold with mappings in `subgraph/`
+
+## Repository Layout
+
+- `src/`: protocol contracts
+- `test/`: unit, fuzz, invariant, fork, governance, oracle, and security tests
+- `script/`: deployment and post-deployment verification scripts
+- `frontend/`: Vite React dApp for wallet, vault, AMM, and governance flows
+- `subgraph/`: Graph schema, mappings, ABIs, and documented queries
+- `docs/`: architecture and audit documents
+- `reports/`: coverage and gas reports
+
+## Quick Start
+
+### Contracts
+
+```bash
+npm install
+forge build
+forge test
+slither . --filter-paths "lib|node_modules|out|cache" --exclude solc-version
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+copy .env.example .env
+npm run dev
+```
+
+### Subgraph
+
+```bash
+cd subgraph
+npm install
+npm run codegen
+npm run build
+```
+
+## Key Documents
+
 - [Deliverable Matrix](docs/DELIVERABLE_MATRIX.md)
+- [Architecture](docs/architecture/architecture.md)
+- [Audit Report](docs/audit/audit-report.md)
+- [Coverage Report](reports/coverage/coverage.md)
+- [Gas Report](reports/gas/gas-report.md)
 
-Immediate next actions:
-1. Initialize Git and create the remote repository.
-2. Commit the protocol-core implementation.
-3. Wire the frontend and subgraph to the deployed contract addresses.
-4. Fill in real L2 RPC, explorer, and deployment environment values.
+## Current Status
 
-This repo is now organized for the actual final exam requirements, not the original setup handout.
+What is ready inside the repo:
+
+- 82 passing Foundry tests
+- Slither clean on the current snapshot
+- Governance parameters moved closer to the final project specification
+- Deployment verification script checks timelock ownership and privileged-role handoff
+- Frontend and subgraph now have working project structure instead of placeholders
+
+What still needs live execution outside the repo:
+
+- Deploy to an approved L2 testnet
+- Verify contracts on the block explorer
+- Publish the subgraph using real deployed addresses
+- Capture final verified address list and live L2 gas comparison
+- Prepare the final slide deck PDF

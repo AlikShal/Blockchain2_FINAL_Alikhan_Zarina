@@ -1,9 +1,8 @@
-# Audit Workspace
+# Audit Docs
 
-Put the internal audit report, Slither notes, reproduced exploits, and findings here.
+Primary artifacts:
 
-Recommended files to add next:
-- `audit-report.md`
-- `slither-findings.md`
-- `reentrancy-case-study.md`
-- `access-control-case-study.md`
+- [audit-report.md](./audit-report.md)
+- [reentrancy-case-study.md](./reentrancy-case-study.md)
+- [access-control-case-study.md](./access-control-case-study.md)
+- [slither-findings.md](./slither-findings.md)

@@ -1,24 +1,23 @@
 {
-  "name": "erc20-tokenization-platform",
+  "name": "option-c-rwa-tokenization-platform",
   "version": "1.0.0",
-  "description": "Asset-backed ERC-20 tokenization platform with AMM and governance",
+  "description": "RWA tokenization platform with ERC-4626 vaulting, AMM, oracle integration, and governance",
   "scripts": {
-    "test": "forge test",
     "build": "forge build",
+    "test": "forge test",
     "fmt": "forge fmt",
     "fmt:check": "forge fmt --check",
     "coverage": "forge coverage --report summary",
+    "lint:sol": "solhint \"src/**/*.sol\" \"script/**/*.sol\"",
     "anvil": "anvil",
     "deploy:anvil": "forge script script/Deploy.s.sol:Deploy --rpc-url http://localhost:8545 --broadcast",
     "deploy:testnet": "forge script script/Deploy.s.sol:Deploy --rpc-url $TESTNET_RPC_URL --broadcast --verify",
-    "verify:post": "forge script script/VerifyPostDeploy.s.sol:VerifyPostDeploy --rpc-url $TESTNET_RPC_URL",
-    "fork": "anvil --fork-url $MAINNET_RPC_URL"
-  },
-  "devDependencies": {
-    "dotenv": "^16.0.0",
-    "hardhat": "^2.14.0"
+    "verify:post": "forge script script/VerifyPostDeploy.s.sol:VerifyPostDeploy --rpc-url $TESTNET_RPC_URL"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.0"
+  },
+  "devDependencies": {
+    "solhint": "^5.0.3"
   }
 }

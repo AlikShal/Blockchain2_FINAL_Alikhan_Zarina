@@ -72,6 +72,20 @@ contract AssetVaultTest is Test {
         assertTrue(vault.isHealthy());
     }
 
+    function testMintSharesBackedOneToOne() public {
+        uint256 shareAmount = 250 * 10 ** 18;
+
+        vm.prank(user1);
+        backingAsset.approve(address(vault), shareAmount);
+
+        vm.prank(user1);
+        uint256 assets = vault.mint(shareAmount, user1);
+
+        assertEq(assets, shareAmount);
+        assertEq(vault.balanceOf(user1), shareAmount);
+        assertEq(assetToken.balanceOf(user1), shareAmount);
+    }
+
     function testDepositFails() public {
         vm.prank(user1);
         vm.expectRevert();

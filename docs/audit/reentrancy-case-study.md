@@ -1,21 +1,21 @@
 # Reentrancy Case Study
 
+The repository includes a reproduced reentrancy vulnerability and its hardened counterpart in `test/OracleAndSecurity.t.sol`.
+
 ## Vulnerable Pattern
 
-`test/OracleAndSecurity.t.sol` includes `VulnerableEtherVault`, which transfers ETH before clearing the caller balance. The attacker contract re-enters during `receive()` and drains more ETH than the initial deposit.
-
-Covered by:
-
-- `testReentrancyCaseStudyDrainsVulnerableVault`
+- Contract: `VulnerableEtherVault`
+- Issue: ETH is sent with `call{value: amount}("")` before the user balance is reset
+- Exploit path: attacker contract re-enters `withdraw()` from the `receive()` hook
 
 ## Hardened Pattern
 
-`HardenedEtherVault` clears balances before transfer and uses OpenZeppelin `ReentrancyGuard`.
+- Contract: `HardenedEtherVault`
+- Fixes:
+  - `nonReentrant`
+  - state is zeroed before the external call
 
-Covered by:
+## Test Evidence
 
-- `testReentrancyCaseStudyHardenedVaultRevertsAttack`
-
-## Protocol Application
-
-The production `AssetVault` and `AMM` apply `nonReentrant` on deposit, withdraw, mint, redeem, add liquidity, remove liquidity, and swap flows.
+- Exploit succeeds: `testReentrancyCaseStudyDrainsVulnerableVault`
+- Exploit fails: `testReentrancyCaseStudyHardenedVaultRevertsAttack`

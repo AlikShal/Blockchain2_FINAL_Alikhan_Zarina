@@ -1,11 +1,7 @@
-# Architecture Workspace
+# Architecture Docs
 
-Put the architecture document, diagrams, ADRs, and storage-layout notes here.
+Primary document:
 
-Recommended files to add next:
-- `architecture.md`
-- `adr-001-scenario-choice.md`
-- `adr-002-governance-stack.md`
-- `adr-003-upgradeability-scope.md`
-- `diagrams/system-context.png`
-- `diagrams/contract-map.png`
+- [architecture.md](./architecture.md)
+
+This folder captures the system design, trust assumptions, storage layout, and the key user-flow diagrams required for the final project defense.

@@ -1,30 +1,26 @@
 # Deliverable Matrix
 
-Use this file as the submission checklist that maps requirements to concrete artifacts.
-
-| Requirement | Artifact | Current Status |
+| Requirement | Evidence in Repo | Status |
 | --- | --- | --- |
-| GitHub repo by Week 6 | remote repo + commit history | `todo` |
-| Smart contract codebase | `src/` | `implemented for Phases 2-4` |
-| 50+ tests | `test/` | `77 passing tests` |
-| Fuzz tests | `test/FuzzAndInvariant.t.sol` | `11 fuzz tests` |
-| Invariant tests | `test/FuzzAndInvariant.t.sol` | `7 invariant tests` |
-| Fork tests | `test/ForkReadiness.t.sol` | `4 fork-ready tests` |
-| >= 90% coverage | `reports/coverage/coverage.md` | `96.64% src line coverage` |
-| ERC20Votes + ERC20Permit | `src/Governance.sol` | `implemented` |
-| Governor + Timelock | `src/Governance.sol` + deploy script | `implemented` |
-| ERC721 or ERC1155 | `src/AssetReceipt.sol` | `implemented as ERC1155 companion receipt` |
-| ERC4626 vault | `src/AssetVault.sol` | `implemented` |
-| Chainlink oracle | `src/PriceOracle.sol` | `implemented with mock tests` |
-| CREATE + CREATE2 factory | `src/VaultFactory.sol` | `implemented and tested` |
-| UUPS upgrade path | `src/AssetRegistry.sol` + `src/AssetRegistryV2.sol` | `implemented and tested` |
-| Yul benchmark | `src/AMM.sol` + `reports/gas/gas-report.md` | `implemented` |
-| Frontend dApp | `frontend/` | `todo` |
-| Subgraph | `subgraph/` | `todo` |
-| L2 deployment script | `script/Deploy.s.sol` | `protocol deployment script added` |
-| Post-deploy verification | `script/VerifyPostDeploy.s.sol` | `role and vault checks added` |
-| GitHub Actions | `.github/workflows/ci.yml` | `Foundry, coverage, and Slither` |
-| Audit report | `docs/audit/` | `added` |
-| Architecture report | `docs/architecture/architecture.md` | `added with Mermaid contract map` |
-| Presentation deck | `docs/presentation/` | `todo` |
-| Gas report | `reports/gas/gas-report.md` | `added` |
+| Foundry smart contracts | `src/`, `script/`, `test/` | Done |
+| Unit, fuzz, invariant, fork tests | `test/` with 82 passing tests | Done |
+| Frontend dApp | `frontend/` Vite + React + Wagmi dashboard | Done, pending deployed addresses |
+| The Graph subgraph | `subgraph/` with schema, mappings, ABIs, queries | Done, pending deployment |
+| Deployment scripts | `script/Deploy.s.sol`, `script/VerifyPostDeploy.s.sol` | Done |
+| Security audit report | `docs/audit/audit-report.md` | Done |
+| Architecture document | `docs/architecture/architecture.md` | Done |
+| Gas report | `reports/gas/gas-report.md` | Done |
+| Coverage report | `reports/coverage/coverage.md` | Done |
+| README | `README.md` | Done |
+| L2 verified addresses | Not yet committed | Pending external deployment |
+| Final slide deck PDF | Not in repo | Pending manual presentation work |
+
+## Current Gaps That Still Need External Execution
+
+The following items cannot be truthfully completed without running against a live L2 environment:
+
+- Deploying all contracts to Base Sepolia or another approved L2
+- Verifying those contracts on the explorer
+- Publishing the subgraph with real addresses
+- Capturing final L1 vs L2 gas comparison for live deployments
+- Preparing and exporting the slide deck PDF
