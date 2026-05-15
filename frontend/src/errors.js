@@ -1,6 +1,9 @@
 export function getReadableError(error) {
   const message = String(
-    error?.shortMessage || error?.message || error?.cause?.message || "Transaction failed."
+    error?.shortMessage ||
+      error?.message ||
+      error?.cause?.message ||
+      "Transaction failed."
   );
 
   if (message.includes("User rejected") || message.includes("denied")) {

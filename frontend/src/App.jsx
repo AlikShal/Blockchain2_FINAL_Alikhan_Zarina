@@ -7,7 +7,7 @@ import {
   useDisconnect,
   useReadContract,
   useSwitchChain,
-  useWriteContract
+  useWriteContract,
 } from "wagmi";
 import { getPublicClient, waitForTransactionReceipt } from "wagmi/actions";
 import { formatUnits, parseUnits } from "viem";
@@ -21,7 +21,7 @@ import {
   isConfiguredAddress,
   missingContractKeys,
   subgraphUrl,
-  vaultAbi
+  vaultAbi,
 } from "./contracts";
 import { getReadableError } from "./errors";
 
@@ -33,7 +33,7 @@ const proposalStates = [
   "Succeeded",
   "Queued",
   "Expired",
-  "Executed"
+  "Executed",
 ];
 
 const proposalQuery = `
@@ -85,10 +85,13 @@ function ProposalCard({ proposal, onVote }) {
     abi: governorAbi,
     functionName: "state",
     args: [BigInt(proposal.proposalId)],
-    query: { enabled: contractsReady }
+    query: { enabled: contractsReady },
   });
 
-  const liveState = proposalState.data !== undefined ? proposalStates[Number(proposalState.data)] : proposal.state;
+  const liveState =
+    proposalState.data !== undefined
+      ? proposalStates[Number(proposalState.data)]
+      : proposal.state;
 
   return (
     <article className="proposal-card">
@@ -99,13 +102,22 @@ function ProposalCard({ proposal, onVote }) {
         </div>
         <span className="state-badge">{liveState}</span>
       </div>
-      <p className="proposal-meta">Proposer: {shortenAddress(proposal.proposer)}</p>
+      <p className="proposal-meta">
+        Proposer: {shortenAddress(proposal.proposer)}
+      </p>
       <div className="proposal-votes">
         <span>For: {formatToken(BigInt(proposal.forVotes || "0"))}</span>
-        <span>Against: {formatToken(BigInt(proposal.againstVotes || "0"))}</span>
-        <span>Abstain: {formatToken(BigInt(proposal.abstainVotes || "0"))}</span>
+        <span>
+          Against: {formatToken(BigInt(proposal.againstVotes || "0"))}
+        </span>
+        <span>
+          Abstain: {formatToken(BigInt(proposal.abstainVotes || "0"))}
+        </span>
       </div>
-      <button className="primary-button" onClick={() => onVote(proposal.proposalId)}>
+      <button
+        className="primary-button"
+        onClick={() => onVote(proposal.proposalId)}
+      >
         Vote For
       </button>
     </article>
@@ -125,67 +137,73 @@ export default function App() {
   const [depositAmount, setDepositAmount] = useState("");
   const [swapAmount, setSwapAmount] = useState("");
   const [minOutAmount, setMinOutAmount] = useState("");
-  const [status, setStatus] = useState("Configure deployed addresses and connect a wallet to use the dApp.");
-  const [subgraphState, setSubgraphState] = useState({ proposals: [], swaps: [], error: "" });
+  const [status, setStatus] = useState(
+    "Configure deployed addresses and connect a wallet to use the dApp."
+  );
+  const [subgraphState, setSubgraphState] = useState({
+    proposals: [],
+    swaps: [],
+    error: "",
+  });
 
   const reserveDecimals = useReadContract({
     address: contracts.reserveToken,
     abi: erc20Abi,
     functionName: "decimals",
-    query: { enabled: contractsReady }
+    query: { enabled: contractsReady },
   });
 
   const quoteDecimals = useReadContract({
     address: contracts.quoteToken,
     abi: erc20Abi,
     functionName: "decimals",
-    query: { enabled: contractsReady }
+    query: { enabled: contractsReady },
   });
 
   const reserveSymbol = useReadContract({
     address: contracts.reserveToken,
     abi: erc20Abi,
     functionName: "symbol",
-    query: { enabled: contractsReady }
+    query: { enabled: contractsReady },
   });
 
   const quoteSymbol = useReadContract({
     address: contracts.quoteToken,
     abi: erc20Abi,
     functionName: "symbol",
-    query: { enabled: contractsReady }
+    query: { enabled: contractsReady },
   });
 
   const assetDecimals = useReadContract({
     address: contracts.assetToken,
     abi: erc20Abi,
     functionName: "decimals",
-    query: { enabled: contractsReady }
+    query: { enabled: contractsReady },
   });
 
   const assetSymbol = useReadContract({
     address: contracts.assetToken,
     abi: erc20Abi,
     functionName: "symbol",
-    query: { enabled: contractsReady }
+    query: { enabled: contractsReady },
   });
 
   const reserveBalance = useBalance({
     address,
     token: contracts.reserveToken,
-    query: { enabled: isConnected && contractsReady }
+    query: { enabled: isConnected && contractsReady },
   });
 
   const assetBalance = useBalance({
     address,
     token: contracts.assetToken,
-    query: { enabled: isConnected && contractsReady }
+    query: { enabled: isConnected && contractsReady },
   });
 
   const governanceBalance = useBalance({
     address,
     token: contracts.governanceToken,
-    query: { enabled: isConnected && contractsReady }
+    query: { enabled: isConnected && contractsReady },
   });
 
   const votingPower = useReadContract({
@@ -193,7 +211,7 @@ export default function App() {
     abi: erc20Abi,
     functionName: "getVotes",
     args: address ? [address] : undefined,
-    query: { enabled: isConnected && contractsReady }
+    query: { enabled: isConnected && contractsReady },
   });
 
   const delegateAddress = useReadContract({
@@ -201,7 +219,7 @@ export default function App() {
     abi: erc20Abi,
     functionName: "delegates",
     args: address ? [address] : undefined,
-    query: { enabled: isConnected && contractsReady }
+    query: { enabled: isConnected && contractsReady },
   });
 
   const vaultShares = useReadContract({
@@ -209,35 +227,35 @@ export default function App() {
     abi: vaultAbi,
     functionName: "balanceOf",
     args: address ? [address] : undefined,
-    query: { enabled: isConnected && contractsReady }
+    query: { enabled: isConnected && contractsReady },
   });
 
   const vaultAssets = useReadContract({
     address: contracts.assetVault,
     abi: vaultAbi,
     functionName: "totalAssets",
-    query: { enabled: contractsReady }
+    query: { enabled: contractsReady },
   });
 
   const totalDeposited = useReadContract({
     address: contracts.assetVault,
     abi: vaultAbi,
     functionName: "totalDeposited",
-    query: { enabled: contractsReady }
+    query: { enabled: contractsReady },
   });
 
   const reserveA = useReadContract({
     address: contracts.amm,
     abi: ammAbi,
     functionName: "reserveA",
-    query: { enabled: contractsReady }
+    query: { enabled: contractsReady },
   });
 
   const reserveB = useReadContract({
     address: contracts.amm,
     abi: ammAbi,
     functionName: "reserveB",
-    query: { enabled: contractsReady }
+    query: { enabled: contractsReady },
   });
 
   useEffect(() => {
@@ -245,7 +263,12 @@ export default function App() {
 
     async function fetchOnchainFeed() {
       if (!contractsReady) {
-        setSubgraphState({ proposals: [], swaps: [], error: "Contract addresses are required before loading local activity." });
+        setSubgraphState({
+          proposals: [],
+          swaps: [],
+          error:
+            "Contract addresses are required before loading local activity.",
+        });
         return;
       }
 
@@ -259,14 +282,16 @@ export default function App() {
               (item) => item.type === "event" && item.name === "ProposalCreated"
             ),
             fromBlock: 0n,
-            toBlock: "latest"
+            toBlock: "latest",
           }),
           client.getLogs({
             address: contracts.amm,
-            event: ammAbi.find((item) => item.type === "event" && item.name === "Swap"),
+            event: ammAbi.find(
+              (item) => item.type === "event" && item.name === "Swap"
+            ),
             fromBlock: 0n,
-            toBlock: "latest"
-          })
+            toBlock: "latest",
+          }),
         ]);
 
         const proposals = await Promise.all(
@@ -281,14 +306,14 @@ export default function App() {
                   address: contracts.governor,
                   abi: governorAbi,
                   functionName: "state",
-                  args: [proposalId]
+                  args: [proposalId],
                 }),
                 client.readContract({
                   address: contracts.governor,
                   abi: governorAbi,
                   functionName: "proposalVotes",
-                  args: [proposalId]
-                })
+                  args: [proposalId],
+                }),
               ]);
 
               return {
@@ -300,7 +325,7 @@ export default function App() {
                 againstVotes: votes[0].toString(),
                 forVotes: votes[1].toString(),
                 abstainVotes: votes[2].toString(),
-                createdAtBlock: log.blockNumber?.toString() || "0"
+                createdAtBlock: log.blockNumber?.toString() || "0",
               };
             })
         );
@@ -314,19 +339,20 @@ export default function App() {
             trader: log.args.swapper,
             amountIn: log.args.amountIn.toString(),
             amountOut: log.args.amountOut.toString(),
-            timestamp: "0"
+            timestamp: "0",
           }));
 
         setSubgraphState({
           proposals,
           swaps,
-          error: "Local mode: showing direct on-chain activity without subgraph."
+          error:
+            "Local mode: showing direct on-chain activity without subgraph.",
         });
       } catch (error) {
         setSubgraphState({
           proposals: [],
           swaps: [],
-          error: getReadableError(error)
+          error: getReadableError(error),
         });
       }
     }
@@ -337,7 +363,7 @@ export default function App() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ query: proposalQuery }),
-          signal: controller.signal
+          signal: controller.signal,
         });
         const payload = await response.json();
 
@@ -348,7 +374,7 @@ export default function App() {
         setSubgraphState({
           proposals: payload.data?.proposals || [],
           swaps: payload.data?.swaps || [],
-          error: ""
+          error: "",
         });
       } catch (error) {
         if (!controller.signal.aborted) {
@@ -379,7 +405,9 @@ export default function App() {
     }
 
     if (!contractsReady) {
-      throw new Error(`Missing contract addresses: ${missingContractKeys.join(", ")}`);
+      throw new Error(
+        `Missing contract addresses: ${missingContractKeys.join(", ")}`
+      );
     }
 
     if (wrongNetwork) {
@@ -399,7 +427,7 @@ export default function App() {
           address: contracts.governanceToken,
           abi: erc20Abi,
           functionName: "delegate",
-          args: [delegatee]
+          args: [delegatee],
         },
         "Delegation"
       );
@@ -428,7 +456,7 @@ export default function App() {
           address: contracts.reserveToken,
           abi: erc20Abi,
           functionName: "approve",
-          args: [contracts.assetVault, amount]
+          args: [contracts.assetVault, amount],
         },
         "Vault approval"
       );
@@ -438,7 +466,7 @@ export default function App() {
           address: contracts.assetVault,
           abi: vaultAbi,
           functionName: "deposit",
-          args: [amount, address]
+          args: [amount, address],
         },
         "Vault deposit"
       );
@@ -469,7 +497,7 @@ export default function App() {
           address: contracts.assetToken,
           abi: erc20Abi,
           functionName: "approve",
-          args: [contracts.amm, amountIn]
+          args: [contracts.amm, amountIn],
         },
         "AMM approval"
       );
@@ -479,7 +507,7 @@ export default function App() {
           address: contracts.amm,
           abi: ammAbi,
           functionName: "swapAForB",
-          args: [amountIn, minOut]
+          args: [amountIn, minOut],
         },
         "Swap"
       );
@@ -496,7 +524,7 @@ export default function App() {
           address: contracts.governor,
           abi: governorAbi,
           functionName: "castVote",
-          args: [BigInt(proposalId), 1]
+          args: [BigInt(proposalId), 1],
         },
         `Vote for proposal ${proposalId}`
       );
@@ -524,8 +552,8 @@ export default function App() {
           <p className="eyebrow">Blockchain Technologies 2</p>
           <h1>Option C RWA Tokenization Control Room</h1>
           <p className="hero-copy">
-            Monitor reserve-backed assets, run user flows through the vault and AMM, and interact
-            with on-chain governance from one dashboard.
+            Monitor reserve-backed assets, run user flows through the vault and
+            AMM, and interact with on-chain governance from one dashboard.
           </p>
         </div>
 
@@ -555,15 +583,23 @@ export default function App() {
       <section className="status-bar">
         <div>
           <span className="status-label">Network</span>
-          <strong>{wrongNetwork ? "Wrong chain detected" : expectedChain.name}</strong>
+          <strong>
+            {wrongNetwork ? "Wrong chain detected" : expectedChain.name}
+          </strong>
         </div>
         <div>
           <span className="status-label">Frontend status</span>
-          <strong>{contractsReady ? "Contract config loaded" : "Missing addresses"}</strong>
+          <strong>
+            {contractsReady ? "Contract config loaded" : "Missing addresses"}
+          </strong>
         </div>
         <div className="status-cta">
           {wrongNetwork ? (
-            <button className="primary-button" onClick={handleSwitchChain} disabled={isSwitching}>
+            <button
+              className="primary-button"
+              onClick={handleSwitchChain}
+              disabled={isSwitching}
+            >
               {isSwitching ? "Switching..." : `Switch to ${expectedChain.name}`}
             </button>
           ) : null}
@@ -574,7 +610,8 @@ export default function App() {
         <section className="warning-card">
           <h2>Deployment values still needed</h2>
           <p>
-            Fill the missing environment variables in <code>frontend/.env</code>:
+            Fill the missing environment variables in <code>frontend/.env</code>
+            :
           </p>
           <p className="inline-list">{missingContractKeys.join(", ")}</p>
         </section>
@@ -586,15 +623,25 @@ export default function App() {
           <div className="stat-grid">
             <article className="stat-card">
               <span>Reserve Balance</span>
-              <strong>{reserveBalance.data ? reserveBalance.data.formatted : "0"} {reserveSymbol.data || "RSV"}</strong>
+              <strong>
+                {reserveBalance.data ? reserveBalance.data.formatted : "0"}{" "}
+                {reserveSymbol.data || "RSV"}
+              </strong>
             </article>
             <article className="stat-card">
               <span>Asset Balance</span>
-              <strong>{assetBalance.data ? assetBalance.data.formatted : "0"} ASSET</strong>
+              <strong>
+                {assetBalance.data ? assetBalance.data.formatted : "0"} ASSET
+              </strong>
             </article>
             <article className="stat-card">
               <span>Governance Balance</span>
-              <strong>{governanceBalance.data ? governanceBalance.data.formatted : "0"} GOV</strong>
+              <strong>
+                {governanceBalance.data
+                  ? governanceBalance.data.formatted
+                  : "0"}{" "}
+                GOV
+              </strong>
             </article>
             <article className="stat-card">
               <span>Voting Power</span>
@@ -629,19 +676,35 @@ export default function App() {
           <div className="stat-grid">
             <article className="stat-card">
               <span>Vault Reserve Assets</span>
-              <strong>{formatToken(vaultAssets.data, Number(reserveDecimals.data ?? 18))}</strong>
+              <strong>
+                {formatToken(
+                  vaultAssets.data,
+                  Number(reserveDecimals.data ?? 18)
+                )}
+              </strong>
             </article>
             <article className="stat-card">
               <span>Total Deposited</span>
-              <strong>{formatToken(totalDeposited.data, Number(reserveDecimals.data ?? 18))}</strong>
+              <strong>
+                {formatToken(
+                  totalDeposited.data,
+                  Number(reserveDecimals.data ?? 18)
+                )}
+              </strong>
             </article>
             <article className="stat-card">
               <span>AMM Reserve A</span>
-              <strong>{formatToken(reserveA.data, Number(assetDecimals.data ?? 18))} {assetSymbol.data || "ASSET"}</strong>
+              <strong>
+                {formatToken(reserveA.data, Number(assetDecimals.data ?? 18))}{" "}
+                {assetSymbol.data || "ASSET"}
+              </strong>
             </article>
             <article className="stat-card">
               <span>AMM Reserve B</span>
-              <strong>{formatToken(reserveB.data, Number(quoteDecimals.data ?? 18))} {quoteSymbol.data || "QTE"}</strong>
+              <strong>
+                {formatToken(reserveB.data, Number(quoteDecimals.data ?? 18))}{" "}
+                {quoteSymbol.data || "QTE"}
+              </strong>
             </article>
           </div>
         </section>
@@ -688,19 +751,29 @@ export default function App() {
         <section className="panel panel-wide">
           <h2>Indexed Governance Feed</h2>
           <p className="panel-copy">
-            This section is intentionally sourced from the subgraph rather than direct contract
-            calls, so the frontend satisfies the indexing requirement.
+            This section is intentionally sourced from the subgraph rather than
+            direct contract calls, so the frontend satisfies the indexing
+            requirement.
           </p>
-          {subgraphState.error ? <p className="error-text">{subgraphState.error}</p> : null}
+          {subgraphState.error ? (
+            <p className="error-text">{subgraphState.error}</p>
+          ) : null}
           <div className="proposal-list">
             {subgraphState.proposals.length === 0 ? (
               <article className="proposal-card">
                 <strong>No indexed proposals yet.</strong>
-                <p>Once the subgraph is deployed and synced, proposals will appear here with vote buttons.</p>
+                <p>
+                  Once the subgraph is deployed and synced, proposals will
+                  appear here with vote buttons.
+                </p>
               </article>
             ) : (
               subgraphState.proposals.map((proposal) => (
-                <ProposalCard key={proposal.id} proposal={proposal} onVote={handleVote} />
+                <ProposalCard
+                  key={proposal.id}
+                  proposal={proposal}
+                  onVote={handleVote}
+                />
               ))
             )}
           </div>
@@ -724,8 +797,18 @@ export default function App() {
               subgraphState.swaps.map((swap) => (
                 <div className="swap-row" key={swap.id}>
                   <span>{shortenAddress(swap.trader)}</span>
-                  <span>{formatToken(BigInt(swap.amountIn || "0"), Number(assetDecimals.data ?? 18))}</span>
-                  <span>{formatToken(BigInt(swap.amountOut || "0"), Number(quoteDecimals.data ?? 18))}</span>
+                  <span>
+                    {formatToken(
+                      BigInt(swap.amountIn || "0"),
+                      Number(assetDecimals.data ?? 18)
+                    )}
+                  </span>
+                  <span>
+                    {formatToken(
+                      BigInt(swap.amountOut || "0"),
+                      Number(quoteDecimals.data ?? 18)
+                    )}
+                  </span>
                 </div>
               ))
             )}
