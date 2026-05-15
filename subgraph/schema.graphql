@@ -1,0 +1,35 @@
+type Asset @entity {
+  id: ID!
+  tokenAddress: Bytes!
+  totalSupply: BigInt!
+}
+
+type VaultPosition @entity {
+  id: ID!
+  user: Bytes!
+  deposited: BigInt!
+}
+
+type Proposal @entity {
+  id: ID!
+  proposer: Bytes!
+  description: String!
+  state: String!
+}
+
+type Vote @entity {
+  id: ID!
+  proposal: Proposal!
+  voter: Bytes!
+  support: Boolean!
+  weight: BigInt!
+}
+
+type Swap @entity {
+  id: ID!
+  trader: Bytes!
+  tokenIn: Bytes!
+  tokenOut: Bytes!
+  amountIn: BigInt!
+  amountOut: BigInt!
+}

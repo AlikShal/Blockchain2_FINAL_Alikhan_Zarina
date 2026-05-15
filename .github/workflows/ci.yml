@@ -1,0 +1,47 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  foundry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Setup Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Check formatting
+        run: forge fmt --check
+
+      - name: Build
+        run: forge build
+
+      - name: Test
+        run: forge test
+
+      - name: Coverage
+        run: forge coverage --report summary
+
+  slither:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Slither
+        uses: crytic/slither-action@v0.4.0
+        with:
+          target: "."
+          slither-args: "--filter-paths lib,node_modules,out,cache --exclude solc-version"
