@@ -1,7 +1,6 @@
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\PriceOracle.sol
-*/
+ */
 
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 pragma solidity ^0.8.20;

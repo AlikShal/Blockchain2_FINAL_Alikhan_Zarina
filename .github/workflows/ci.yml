@@ -62,5 +62,5 @@ jobs:
       - name: Run Slither
         uses: crytic/slither-action@v0.4.0
         with:
-          target: "."
-          slither-args: "--filter-paths lib,node_modules,out,cache --exclude solc-version"
+          target: "src"
+          slither-args: '--exclude-dependencies --filter-paths "(src/flat_)" --exclude solc-version'

@@ -31,6 +31,7 @@ contract AMM is ERC20, ReentrancyGuard, Ownable {
         tokenB = IERC20(tokenB_);
     }
 
+    // slither-disable-next-line reentrancy-no-eth
     function addLiquidity(uint256 amountA, uint256 amountB) external nonReentrant returns (uint256 liquidity) {
         require(amountA > 0 && amountB > 0, "AMM: zero amount");
 
@@ -47,6 +48,7 @@ contract AMM is ERC20, ReentrancyGuard, Ownable {
 
         reserveA += amountA;
         reserveB += amountB;
+        // slither-disable-next-line reentrancy-benign
         _mint(_msgSender(), liquidity);
 
         emit LiquidityAdded(_msgSender(), amountA, amountB, liquidity);

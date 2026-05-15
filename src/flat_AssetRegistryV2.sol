@@ -1,8 +1,7 @@
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.0) (utils/StorageSlot.sol)
 // This file was procedurally generated from scripts/generate/templates/StorageSlot.js.
@@ -142,13 +141,10 @@ library StorageSlot {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.0) (utils/Address.sol)
 
@@ -215,7 +211,7 @@ library Address {
     function sendValue(address payable recipient, uint256 amount) internal {
         require(address(this).balance >= amount, "Address: insufficient balance");
 
-        (bool success, ) = recipient.call{value: amount}("");
+        (bool success,) = recipient.call{value: amount}("");
         require(success, "Address: unable to send value, recipient may have reverted");
     }
 
@@ -247,11 +243,10 @@ library Address {
      *
      * _Available since v3.1._
      */
-    function functionCall(
-        address target,
-        bytes memory data,
-        string memory errorMessage
-    ) internal returns (bytes memory) {
+    function functionCall(address target, bytes memory data, string memory errorMessage)
+        internal
+        returns (bytes memory)
+    {
         return functionCallWithValue(target, data, 0, errorMessage);
     }
 
@@ -276,12 +271,10 @@ library Address {
      *
      * _Available since v3.1._
      */
-    function functionCallWithValue(
-        address target,
-        bytes memory data,
-        uint256 value,
-        string memory errorMessage
-    ) internal returns (bytes memory) {
+    function functionCallWithValue(address target, bytes memory data, uint256 value, string memory errorMessage)
+        internal
+        returns (bytes memory)
+    {
         require(address(this).balance >= value, "Address: insufficient balance for call");
         (bool success, bytes memory returndata) = target.call{value: value}(data);
         return verifyCallResultFromTarget(target, success, returndata, errorMessage);
@@ -303,11 +296,11 @@ library Address {
      *
      * _Available since v3.3._
      */
-    function functionStaticCall(
-        address target,
-        bytes memory data,
-        string memory errorMessage
-    ) internal view returns (bytes memory) {
+    function functionStaticCall(address target, bytes memory data, string memory errorMessage)
+        internal
+        view
+        returns (bytes memory)
+    {
         (bool success, bytes memory returndata) = target.staticcall(data);
         return verifyCallResultFromTarget(target, success, returndata, errorMessage);
     }
@@ -328,11 +321,10 @@ library Address {
      *
      * _Available since v3.4._
      */
-    function functionDelegateCall(
-        address target,
-        bytes memory data,
-        string memory errorMessage
-    ) internal returns (bytes memory) {
+    function functionDelegateCall(address target, bytes memory data, string memory errorMessage)
+        internal
+        returns (bytes memory)
+    {
         (bool success, bytes memory returndata) = target.delegatecall(data);
         return verifyCallResultFromTarget(target, success, returndata, errorMessage);
     }
@@ -367,11 +359,11 @@ library Address {
      *
      * _Available since v4.3._
      */
-    function verifyCallResult(
-        bool success,
-        bytes memory returndata,
-        string memory errorMessage
-    ) internal pure returns (bytes memory) {
+    function verifyCallResult(bool success, bytes memory returndata, string memory errorMessage)
+        internal
+        pure
+        returns (bytes memory)
+    {
         if (success) {
             return returndata;
         } else {
@@ -394,13 +386,10 @@ library Address {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.5.0) (interfaces/draft-IERC1822.sol)
 
@@ -422,13 +411,10 @@ interface IERC1822Proxiable {
     function proxiableUUID() external view returns (bytes32);
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.0) (interfaces/IERC1967.sol)
 
@@ -456,13 +442,10 @@ interface IERC1967 {
     event BeaconUpgraded(address indexed beacon);
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts v4.4.1 (proxy/beacon/IBeacon.sol)
 
@@ -480,13 +463,10 @@ interface IBeacon {
     function implementation() external view returns (address);
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.0) (proxy/ERC1967/ERC1967Upgrade.sol)
 
@@ -624,8 +604,7 @@ abstract contract ERC1967Upgrade is IERC1967 {
     function _setBeacon(address newBeacon) private {
         require(Address.isContract(newBeacon), "ERC1967: new beacon is not a contract");
         require(
-            Address.isContract(IBeacon(newBeacon).implementation()),
-            "ERC1967: beacon implementation is not a contract"
+            Address.isContract(IBeacon(newBeacon).implementation()), "ERC1967: beacon implementation is not a contract"
         );
         StorageSlot.getAddressSlot(_BEACON_SLOT).value = newBeacon;
     }
@@ -645,13 +624,10 @@ abstract contract ERC1967Upgrade is IERC1967 {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts v4.4.1 (utils/introspection/IERC165.sol)
 
@@ -678,13 +654,10 @@ interface IERC165 {
     function supportsInterface(bytes4 interfaceId) external view returns (bool);
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.8.0) (utils/math/SignedMath.sol)
 
@@ -729,13 +702,10 @@ library SignedMath {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.0) (utils/math/Math.sol)
 
@@ -1076,13 +1046,10 @@ library Math {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts v4.4.1 (utils/introspection/ERC165.sol)
 
@@ -1113,13 +1080,10 @@ abstract contract ERC165 is IERC165 {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.0) (utils/Strings.sol)
 
@@ -1206,13 +1170,10 @@ library Strings {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.4) (utils/Context.sol)
 
@@ -1242,13 +1203,10 @@ abstract contract Context {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts v4.4.1 (access/IAccessControl.sol)
 
@@ -1338,13 +1296,10 @@ interface IAccessControl {
     function renounceRole(bytes32 role, address account) external;
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.0) (proxy/utils/UUPSUpgradeable.sol)
 
@@ -1445,13 +1400,10 @@ abstract contract UUPSUpgradeable is IERC1822Proxiable, ERC1967Upgrade {
     function _authorizeUpgrade(address newImplementation) internal virtual;
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.0) (access/AccessControl.sol)
 
@@ -1701,13 +1653,10 @@ abstract contract AccessControl is Context, IAccessControl, ERC165 {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 pragma solidity ^0.8.20;
 
@@ -1827,10 +1776,9 @@ contract AssetRegistry is AccessControl, UUPSUpgradeable {
     }
 }
 
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetRegistryV2.sol
-*/
+ */
 
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 pragma solidity ^0.8.20;

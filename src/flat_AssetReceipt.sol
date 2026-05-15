@@ -1,8 +1,7 @@
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetReceipt.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts v4.4.1 (utils/introspection/IERC165.sol)
 
@@ -29,13 +28,10 @@ interface IERC165 {
     function supportsInterface(bytes4 interfaceId) external view returns (bool);
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetReceipt.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.0) (token/ERC1155/IERC1155.sol)
 
@@ -60,11 +56,7 @@ interface IERC1155 is IERC165 {
      * transfers.
      */
     event TransferBatch(
-        address indexed operator,
-        address indexed from,
-        address indexed to,
-        uint256[] ids,
-        uint256[] values
+        address indexed operator, address indexed from, address indexed to, uint256[] ids, uint256[] values
     );
 
     /**
@@ -98,10 +90,10 @@ interface IERC1155 is IERC165 {
      *
      * - `accounts` and `ids` must have the same length.
      */
-    function balanceOfBatch(
-        address[] calldata accounts,
-        uint256[] calldata ids
-    ) external view returns (uint256[] memory);
+    function balanceOfBatch(address[] calldata accounts, uint256[] calldata ids)
+        external
+        view
+        returns (uint256[] memory);
 
     /**
      * @dev Grants or revokes permission to `operator` to transfer the caller's tokens, according to `approved`,
@@ -156,13 +148,10 @@ interface IERC1155 is IERC165 {
     ) external;
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetReceipt.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts v4.4.1 (utils/introspection/ERC165.sol)
 
@@ -193,13 +182,10 @@ abstract contract ERC165 is IERC165 {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetReceipt.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.4) (utils/Context.sol)
 
@@ -229,13 +215,10 @@ abstract contract Context {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetReceipt.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.0) (utils/Address.sol)
 
@@ -302,7 +285,7 @@ library Address {
     function sendValue(address payable recipient, uint256 amount) internal {
         require(address(this).balance >= amount, "Address: insufficient balance");
 
-        (bool success, ) = recipient.call{value: amount}("");
+        (bool success,) = recipient.call{value: amount}("");
         require(success, "Address: unable to send value, recipient may have reverted");
     }
 
@@ -334,11 +317,10 @@ library Address {
      *
      * _Available since v3.1._
      */
-    function functionCall(
-        address target,
-        bytes memory data,
-        string memory errorMessage
-    ) internal returns (bytes memory) {
+    function functionCall(address target, bytes memory data, string memory errorMessage)
+        internal
+        returns (bytes memory)
+    {
         return functionCallWithValue(target, data, 0, errorMessage);
     }
 
@@ -363,12 +345,10 @@ library Address {
      *
      * _Available since v3.1._
      */
-    function functionCallWithValue(
-        address target,
-        bytes memory data,
-        uint256 value,
-        string memory errorMessage
-    ) internal returns (bytes memory) {
+    function functionCallWithValue(address target, bytes memory data, uint256 value, string memory errorMessage)
+        internal
+        returns (bytes memory)
+    {
         require(address(this).balance >= value, "Address: insufficient balance for call");
         (bool success, bytes memory returndata) = target.call{value: value}(data);
         return verifyCallResultFromTarget(target, success, returndata, errorMessage);
@@ -390,11 +370,11 @@ library Address {
      *
      * _Available since v3.3._
      */
-    function functionStaticCall(
-        address target,
-        bytes memory data,
-        string memory errorMessage
-    ) internal view returns (bytes memory) {
+    function functionStaticCall(address target, bytes memory data, string memory errorMessage)
+        internal
+        view
+        returns (bytes memory)
+    {
         (bool success, bytes memory returndata) = target.staticcall(data);
         return verifyCallResultFromTarget(target, success, returndata, errorMessage);
     }
@@ -415,11 +395,10 @@ library Address {
      *
      * _Available since v3.4._
      */
-    function functionDelegateCall(
-        address target,
-        bytes memory data,
-        string memory errorMessage
-    ) internal returns (bytes memory) {
+    function functionDelegateCall(address target, bytes memory data, string memory errorMessage)
+        internal
+        returns (bytes memory)
+    {
         (bool success, bytes memory returndata) = target.delegatecall(data);
         return verifyCallResultFromTarget(target, success, returndata, errorMessage);
     }
@@ -454,11 +433,11 @@ library Address {
      *
      * _Available since v4.3._
      */
-    function verifyCallResult(
-        bool success,
-        bytes memory returndata,
-        string memory errorMessage
-    ) internal pure returns (bytes memory) {
+    function verifyCallResult(bool success, bytes memory returndata, string memory errorMessage)
+        internal
+        pure
+        returns (bytes memory)
+    {
         if (success) {
             return returndata;
         } else {
@@ -481,13 +460,10 @@ library Address {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetReceipt.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts v4.4.1 (token/ERC1155/extensions/IERC1155MetadataURI.sol)
 
@@ -511,13 +487,10 @@ interface IERC1155MetadataURI is IERC1155 {
     function uri(uint256 id) external view returns (string memory);
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetReceipt.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.5.0) (token/ERC1155/IERC1155Receiver.sol)
 
@@ -544,13 +517,9 @@ interface IERC1155Receiver is IERC165 {
      * @param data Additional data with no specified format
      * @return `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"))` if transfer is allowed
      */
-    function onERC1155Received(
-        address operator,
-        address from,
-        uint256 id,
-        uint256 value,
-        bytes calldata data
-    ) external returns (bytes4);
+    function onERC1155Received(address operator, address from, uint256 id, uint256 value, bytes calldata data)
+        external
+        returns (bytes4);
 
     /**
      * @dev Handles the receipt of a multiple ERC1155 token types. This function
@@ -577,13 +546,10 @@ interface IERC1155Receiver is IERC165 {
     ) external returns (bytes4);
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetReceipt.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.0) (token/ERC1155/ERC1155.sol)
 
@@ -626,10 +592,8 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
      * @dev See {IERC165-supportsInterface}.
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
-        return
-            interfaceId == type(IERC1155).interfaceId ||
-            interfaceId == type(IERC1155MetadataURI).interfaceId ||
-            super.supportsInterface(interfaceId);
+        return interfaceId == type(IERC1155).interfaceId || interfaceId == type(IERC1155MetadataURI).interfaceId
+            || super.supportsInterface(interfaceId);
     }
 
     /**
@@ -665,10 +629,13 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
      *
      * - `accounts` and `ids` must have the same length.
      */
-    function balanceOfBatch(
-        address[] memory accounts,
-        uint256[] memory ids
-    ) public view virtual override returns (uint256[] memory) {
+    function balanceOfBatch(address[] memory accounts, uint256[] memory ids)
+        public
+        view
+        virtual
+        override
+        returns (uint256[] memory)
+    {
         require(accounts.length == ids.length, "ERC1155: accounts and ids length mismatch");
 
         uint256[] memory batchBalances = new uint256[](accounts.length);
@@ -697,13 +664,11 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
     /**
      * @dev See {IERC1155-safeTransferFrom}.
      */
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
-    ) public virtual override {
+    function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes memory data)
+        public
+        virtual
+        override
+    {
         require(
             from == _msgSender() || isApprovedForAll(from, _msgSender()),
             "ERC1155: caller is not token owner or approved"
@@ -740,13 +705,10 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
      * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155Received} and return the
      * acceptance magic value.
      */
-    function _safeTransferFrom(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
-    ) internal virtual {
+    function _safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes memory data)
+        internal
+        virtual
+    {
         require(to != address(0), "ERC1155: transfer to the zero address");
 
         address operator = _msgSender();
@@ -874,12 +836,10 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
      * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155BatchReceived} and return the
      * acceptance magic value.
      */
-    function _mintBatch(
-        address to,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
-    ) internal virtual {
+    function _mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data)
+        internal
+        virtual
+    {
         require(to != address(0), "ERC1155: mint to the zero address");
         require(ids.length == amounts.length, "ERC1155: ids and amounts length mismatch");
 
@@ -1082,13 +1042,10 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetReceipt.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.8.0) (utils/math/SignedMath.sol)
 
@@ -1133,13 +1090,10 @@ library SignedMath {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetReceipt.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.0) (utils/math/Math.sol)
 
@@ -1480,13 +1434,10 @@ library Math {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetReceipt.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.0) (utils/Strings.sol)
 
@@ -1573,13 +1524,10 @@ library Strings {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetReceipt.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts v4.4.1 (access/IAccessControl.sol)
 
@@ -1669,13 +1617,10 @@ interface IAccessControl {
     function renounceRole(bytes32 role, address account) external;
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetReceipt.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC1155/extensions/ERC1155Supply.sol)
 
@@ -1741,13 +1686,10 @@ abstract contract ERC1155Supply is ERC1155 {
     }
 }
 
-
-
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetReceipt.sol
-*/
-            
+ */
+
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 // OpenZeppelin Contracts (last updated v4.9.0) (access/AccessControl.sol)
 
@@ -1997,10 +1939,9 @@ abstract contract AccessControl is Context, IAccessControl, ERC165 {
     }
 }
 
-
-/** 
+/**
  *  SourceUnit: c:\Users\Alikhan\OneDrive\Blockchain_Technology\Blockchain2_FINAL_Alikhan_Zarina\src\AssetReceipt.sol
-*/
+ */
 
 ////// SPDX-License-Identifier-FLATTEN-SUPPRESS-WARNING: MIT
 pragma solidity ^0.8.20;

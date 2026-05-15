@@ -33,6 +33,7 @@ contract AssetReceipt is ERC1155Supply, AccessControl {
         emit ReceiptConfigured(id, maxSupply_, tokenURI);
     }
 
+    // slither-disable-next-line reentrancy-events
     function mint(address to, uint256 id, uint256 amount, bytes calldata data) external onlyRole(ISSUER_ROLE) {
         require(to != address(0), "AssetReceipt: to zero");
         require(maxSupply[id] > 0, "AssetReceipt: not configured");

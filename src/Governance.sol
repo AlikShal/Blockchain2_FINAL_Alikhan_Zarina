@@ -53,12 +53,12 @@ contract ProtocolGovernor is
     uint256 public constant PROPOSAL_THRESHOLD = 10_000 * 10 ** 18;
     uint256 public constant QUORUM_PERCENT = 4;
 
-    constructor(IVotes token, TimelockController timelock)
+    constructor(IVotes governanceToken, TimelockController timelockController)
         Governor("ProtocolGovernor")
         GovernorSettings(VOTING_DELAY_BLOCKS, VOTING_PERIOD_BLOCKS, PROPOSAL_THRESHOLD)
-        GovernorVotes(token)
+        GovernorVotes(governanceToken)
         GovernorVotesQuorumFraction(QUORUM_PERCENT)
-        GovernorTimelockControl(timelock)
+        GovernorTimelockControl(timelockController)
     {}
 
     function votingDelay() public view override(IGovernor, GovernorSettings) returns (uint256) {

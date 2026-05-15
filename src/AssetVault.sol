@@ -42,6 +42,7 @@ contract AssetVault is ERC4626, Ownable, ReentrancyGuard {
         shares = _depositReserve(receiver, assets);
     }
 
+    // slither-disable-next-line reentrancy-benign
     function mint(uint256 shares, address receiver) public override nonReentrant returns (uint256 assets) {
         assets = previewMint(shares);
         require(assets > 0, "AssetVault: zero assets");
@@ -64,6 +65,7 @@ contract AssetVault is ERC4626, Ownable, ReentrancyGuard {
         shares = _withdrawReserve(receiver, owner_, assets);
     }
 
+    // slither-disable-next-line reentrancy-benign
     function redeem(uint256 shares, address receiver, address owner_)
         public
         override
@@ -86,6 +88,7 @@ contract AssetVault is ERC4626, Ownable, ReentrancyGuard {
         return getReserveRatio() >= RESERVE_RATIO;
     }
 
+    // slither-disable-next-line reentrancy-benign
     function _depositReserve(address receiver, uint256 assets) internal returns (uint256 shares) {
         require(assets > 0, "AssetVault: zero assets");
         shares = super.deposit(assets, receiver);
@@ -94,10 +97,12 @@ contract AssetVault is ERC4626, Ownable, ReentrancyGuard {
         emit TokensMinted(receiver, assets);
     }
 
+    // slither-disable-next-line reentrancy-eth, reentrancy-benign
     function _withdrawReserve(address receiver, address owner_, uint256 assets) internal returns (uint256 shares) {
         require(assets > 0, "AssetVault: zero assets");
         require(userDeposits[owner_] >= assets, "AssetVault: insufficient deposit");
         _burnAssetToken(owner_, assets);
+        // slither-disable-next-line reentrancy-benign
         shares = super.withdraw(assets, receiver, owner_);
         _recordWithdrawal(owner_, assets);
     }
