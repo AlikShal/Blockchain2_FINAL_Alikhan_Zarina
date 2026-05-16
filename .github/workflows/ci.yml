@@ -53,13 +53,22 @@ jobs:
         run: forge test
 
       - name: Coverage
-        run: forge coverage --report summary
+        run: forge coverage --report summary --ir-minimum
 
   slither:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Node dependencies
+        run: npm ci
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -68,9 +77,6 @@ jobs:
 
       - name: Setup Foundry
         uses: foundry-rs/foundry-toolchain@v1
-
-      - name: Install OpenZeppelin contracts
-        run: forge install OpenZeppelin/openzeppelin-contracts
 
       - name: Build contracts
         run: forge build
