@@ -3,7 +3,7 @@ export function getReadableError(error) {
     error?.shortMessage ||
       error?.message ||
       error?.cause?.message ||
-      'Transaction failed.'
+      'Transaction failed.',
   );
 
   if (message.includes('User rejected') || message.includes('denied')) {

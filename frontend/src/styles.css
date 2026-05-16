@@ -3,7 +3,8 @@
 :root {
   color-scheme: light;
   font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
-  background: radial-gradient(
+  background:
+    radial-gradient(
       circle at top left,
       rgba(255, 153, 92, 0.28),
       transparent 28%
@@ -244,7 +245,10 @@ input:focus {
   border-radius: 999px;
   border: none;
   padding: 12px 18px;
-  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
 }
 
 .primary-button {

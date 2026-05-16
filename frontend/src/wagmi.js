@@ -21,7 +21,7 @@ export const appConfig = createConfig({
   transports: {
     [expectedChain.id]: http(
       import.meta.env.VITE_PUBLIC_RPC_URL ||
-        expectedChain.rpcUrls.default.http[0]
+        expectedChain.rpcUrls.default.http[0],
     ),
   },
 });

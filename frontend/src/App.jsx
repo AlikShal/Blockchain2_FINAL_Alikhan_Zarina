@@ -138,7 +138,7 @@ export default function App() {
   const [swapAmount, setSwapAmount] = useState('');
   const [minOutAmount, setMinOutAmount] = useState('');
   const [status, setStatus] = useState(
-    'Configure deployed addresses and connect a wallet to use the dApp.'
+    'Configure deployed addresses and connect a wallet to use the dApp.',
   );
   const [subgraphState, setSubgraphState] = useState({
     proposals: [],
@@ -279,7 +279,8 @@ export default function App() {
           client.getLogs({
             address: contracts.governor,
             event: governorAbi.find(
-              (item) => item.type === 'event' && item.name === 'ProposalCreated'
+              (item) =>
+                item.type === 'event' && item.name === 'ProposalCreated',
             ),
             fromBlock: 0n,
             toBlock: 'latest',
@@ -287,7 +288,7 @@ export default function App() {
           client.getLogs({
             address: contracts.amm,
             event: ammAbi.find(
-              (item) => item.type === 'event' && item.name === 'Swap'
+              (item) => item.type === 'event' && item.name === 'Swap',
             ),
             fromBlock: 0n,
             toBlock: 'latest',
@@ -327,7 +328,7 @@ export default function App() {
                 abstainVotes: votes[2].toString(),
                 createdAtBlock: log.blockNumber?.toString() || '0',
               };
-            })
+            }),
         );
 
         const swaps = swapLogs
@@ -406,7 +407,7 @@ export default function App() {
 
     if (!contractsReady) {
       throw new Error(
-        `Missing contract addresses: ${missingContractKeys.join(', ')}`
+        `Missing contract addresses: ${missingContractKeys.join(', ')}`,
       );
     }
 
@@ -429,7 +430,7 @@ export default function App() {
           functionName: 'delegate',
           args: [delegatee],
         },
-        'Delegation'
+        'Delegation',
       );
     } catch (error) {
       setStatus(getReadableError(error));
@@ -458,7 +459,7 @@ export default function App() {
           functionName: 'approve',
           args: [contracts.assetVault, amount],
         },
-        'Vault approval'
+        'Vault approval',
       );
 
       await submitAndWait(
@@ -468,7 +469,7 @@ export default function App() {
           functionName: 'deposit',
           args: [amount, address],
         },
-        'Vault deposit'
+        'Vault deposit',
       );
     } catch (error) {
       setStatus(getReadableError(error));
@@ -499,7 +500,7 @@ export default function App() {
           functionName: 'approve',
           args: [contracts.amm, amountIn],
         },
-        'AMM approval'
+        'AMM approval',
       );
 
       await submitAndWait(
@@ -509,7 +510,7 @@ export default function App() {
           functionName: 'swapAForB',
           args: [amountIn, minOut],
         },
-        'Swap'
+        'Swap',
       );
     } catch (error) {
       setStatus(getReadableError(error));
@@ -526,7 +527,7 @@ export default function App() {
           functionName: 'castVote',
           args: [BigInt(proposalId), 1],
         },
-        `Vote for proposal ${proposalId}`
+        `Vote for proposal ${proposalId}`,
       );
     } catch (error) {
       setStatus(getReadableError(error));
@@ -679,7 +680,7 @@ export default function App() {
               <strong>
                 {formatToken(
                   vaultAssets.data,
-                  Number(reserveDecimals.data ?? 18)
+                  Number(reserveDecimals.data ?? 18),
                 )}
               </strong>
             </article>
@@ -688,7 +689,7 @@ export default function App() {
               <strong>
                 {formatToken(
                   totalDeposited.data,
-                  Number(reserveDecimals.data ?? 18)
+                  Number(reserveDecimals.data ?? 18),
                 )}
               </strong>
             </article>
@@ -800,13 +801,13 @@ export default function App() {
                   <span>
                     {formatToken(
                       BigInt(swap.amountIn || '0'),
-                      Number(assetDecimals.data ?? 18)
+                      Number(assetDecimals.data ?? 18),
                     )}
                   </span>
                   <span>
                     {formatToken(
                       BigInt(swap.amountOut || '0'),
-                      Number(quoteDecimals.data ?? 18)
+                      Number(quoteDecimals.data ?? 18),
                     )}
                   </span>
                 </div>
