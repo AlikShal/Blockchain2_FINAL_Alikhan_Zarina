@@ -47,6 +47,34 @@ contract Deploy is Script {
         _handoffAssetTokenAdmin(assetToken, assetVault, timelock);
         governanceToken.transferOwnership(address(timelock));
 
+        // Initialize liquidity and vault
+        // Approve AMM to spend mock tokens
+        backingAsset.approve(address(amm), type(uint256).max);
+        quoteAsset.approve(address(amm), type(uint256).max);
+
+        // Add initial liquidity (10,000 tokens each)
+        uint256 initLiquidityA = 10_000 * 10 ** 18;
+        uint256 initLiquidityB = 10_000 * 10 ** 18;
+        amm.addLiquidity(initLiquidityA, initLiquidityB);
+
+        // Approve Vault to spend backing asset
+        backingAsset.approve(address(assetVault), type(uint256).max);
+        // Deposit backing asset into vault (5,000 tokens)
+        uint256 depositAmt = 5_000 * 10 ** 18;
+        assetVault.deposit(depositAmt);
+
+        // Register asset in AssetRegistry (optional)
+        bytes32 assetId = keccak256(abi.encodePacked("MOCK_ASSET"));
+        registry.registerAsset(
+            assetId,
+            address(backingAsset),
+            address(assetToken),
+            address(assetVault),
+            1_000_000_000 * 10 ** 18,
+            "https://example.com/metadata"
+        );
+        registry.setAssetActive(assetId, true);
+
         vm.stopBroadcast();
 
         console2.log("BackingAsset:", address(backingAsset));
