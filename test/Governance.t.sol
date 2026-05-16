@@ -96,7 +96,9 @@ contract GovernanceTokenTest is Test {
     function testFullGovernorTimelockExecution() public {
         vm.prank(user1);
         govToken.delegate(user1);
-        vm.roll(block.number + 1);
+        vm.roll(vm.getBlockNumber() + 1);
+        vm.warp(vm.getBlockTimestamp() + 1 days);
+        assertGt(govToken.getVotes(user1), 0);
 
         address[] memory targets = new address[](1);
         uint256[] memory values = new uint256[](1);
@@ -108,16 +110,16 @@ contract GovernanceTokenTest is Test {
         vm.prank(user1);
         uint256 proposalId = governor.propose(targets, values, calldatas, description);
 
-        vm.roll(block.number + governor.votingDelay() + 1);
-
+        vm.roll(governor.proposalSnapshot(proposalId) + 1);
+        assertEq(uint256(governor.state(proposalId)), uint256(IGovernor.ProposalState.Active));
         vm.prank(user1);
         governor.castVote(proposalId, 1);
 
-        vm.roll(block.number + governor.votingPeriod() + 1);
-
+        vm.roll(governor.proposalDeadline(proposalId) + 1);
+        assertEq(uint256(governor.state(proposalId)), uint256(IGovernor.ProposalState.Succeeded));
         bytes32 descriptionHash = keccak256(bytes(description));
         governor.queue(targets, values, calldatas, descriptionHash);
-        vm.warp(block.timestamp + timelock.getMinDelay() + 1);
+        vm.warp(vm.getBlockTimestamp() + timelock.getMinDelay() + 1);
         governor.execute(targets, values, calldatas, descriptionHash);
 
         assertEq(target.value(), 42);
