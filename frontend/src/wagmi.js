@@ -1,13 +1,13 @@
-import { createConfig, http } from "wagmi";
-import { injected } from "wagmi/connectors";
-import { baseSepolia, foundry } from "wagmi/chains";
+import { createConfig, http } from 'wagmi';
+import { injected } from 'wagmi/connectors';
+import { baseSepolia, foundry } from 'wagmi/chains';
 
 const configuredChain = (
-  import.meta.env.VITE_CHAIN || "baseSepolia"
+  import.meta.env.VITE_CHAIN || 'baseSepolia'
 ).toLowerCase();
 
 export const expectedChain =
-  configuredChain === "anvil" || configuredChain === "foundry"
+  configuredChain === 'anvil' || configuredChain === 'foundry'
     ? foundry
     : baseSepolia;
 
