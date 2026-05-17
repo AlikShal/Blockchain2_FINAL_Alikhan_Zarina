@@ -74,10 +74,21 @@ What is ready inside the repo:
 - Deployment verification script checks timelock ownership and privileged-role handoff
 - Frontend and subgraph now have working project structure instead of placeholders
 
-What still needs live execution outside the repo:
+## Final Submission Status
 
-- Deploy to an approved L2 testnet
-- Verify contracts on the block explorer
-- Publish the subgraph using real deployed addresses
-- Capture final verified address list and live L2 gas comparison
-- Prepare the final slide deck PDF
+Ready inside the repository:
+
+- 82 passing Foundry tests
+- 96.64% line coverage
+- Slither clean on the current snapshot
+- GitHub Actions CI passing on the latest commit
+- Deployment verification script checks timelock ownership and privileged-role handoff
+- Frontend and subgraph project structure completed
+
+Live deployment evidence:
+
+- Contracts deployed to Base Sepolia
+- Contracts verified on BaseScan
+- Subgraph published with live Base Sepolia addresses
+- Verified contract addresses documented in `docs/deployment/addresses.md`
+- L1 vs L2 gas comparison documented in `reports/gas/gas-report.md`
