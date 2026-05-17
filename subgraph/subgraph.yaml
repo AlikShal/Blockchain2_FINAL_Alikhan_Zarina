@@ -12,7 +12,7 @@ dataSources:
     network: sepolia
 
     source:
-      address: "0x536f14e49e1bb927003e83adebf295f3682ff121"
+      address: "0xbc8Bb735CD83eFa5439481b639014DAC4ceE1092"
       abi: AssetRegistry
       startBlock: 0
 
@@ -42,7 +42,7 @@ dataSources:
     network: sepolia
 
     source:
-      address: "0xb737dd8fc9b304a3520b3bb609cc7532f1425ad0"
+      address: "0x9F114A7f9af9FAAb86de10C1A43Ac3cAC482388B"
       abi: AssetVault
       startBlock: 0
 
@@ -75,7 +75,7 @@ dataSources:
     network: sepolia
 
     source:
-      address: "0x78e6b135b2a7f63b281c80e2ff639eed32e2a81b"
+      address: "0x9A5F0dF96c9333bC81f56c4CAb7956d9D47A298a"
       abi: AMM
       startBlock: 0
 
@@ -102,7 +102,7 @@ dataSources:
     network: sepolia
 
     source:
-      address: "0xb35d3c9b9f2fd72faab282e8dd56da31faa30e3d"
+      address: "0xE1071aD02D88fBFB1F6998e4AFf28b641CBb7E24"
       abi: ProtocolGovernor
       startBlock: 0
 

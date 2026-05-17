@@ -170,7 +170,10 @@ export const ammAbi = [
 
 export const governorAbi = [
   {
-    inputs: [{ internalType: 'uint256', name: 'proposalId', type: 'uint256' }],
+    inputs: [
+      { internalType: 'uint256', name: 'proposalId', type: 'uint256' },
+      { internalType: 'uint8', name: 'support', type: 'uint8' },
+    ],
     name: 'castVote',
     outputs: [{ internalType: 'uint256', name: 'weight', type: 'uint256' }],
     stateMutability: 'nonpayable',

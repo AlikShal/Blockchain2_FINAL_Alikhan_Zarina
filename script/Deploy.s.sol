@@ -43,7 +43,12 @@ contract Deploy is Script {
         AssetRegistry registry = AssetRegistry(address(registryProxy));
 
         _configureTimelock(timelock, governor);
+        // Grant deployer ISSUER_ROLE and PAUSER_ROLE before admin rights are handed off to timelock
+        registry.grantRole(registry.ISSUER_ROLE(), deployer);
+        registry.grantRole(registry.PAUSER_ROLE(), deployer);
         _handoffRegistryAdmin(registry, timelock);
+        // Mint seed supply before handing off MINTER_ROLE to the vault
+        assetToken.mint(deployer, 1_000_000 * 10 ** 18);
         _handoffAssetTokenAdmin(assetToken, assetVault, timelock);
         governanceToken.transferOwnership(address(timelock));
 
@@ -51,6 +56,7 @@ contract Deploy is Script {
         // Approve AMM to spend mock tokens
         backingAsset.approve(address(amm), type(uint256).max);
         quoteAsset.approve(address(amm), type(uint256).max);
+        assetToken.approve(address(amm), type(uint256).max);
 
         // Add initial liquidity (10,000 tokens each)
         uint256 initLiquidityA = 10_000 * 10 ** 18;
@@ -73,7 +79,7 @@ contract Deploy is Script {
             1_000_000_000 * 10 ** 18,
             "https://example.com/metadata"
         );
-        registry.setAssetActive(assetId, true);
+        // setAssetActive omitted: registerAsset already initialises active = true
 
         vm.stopBroadcast();
 

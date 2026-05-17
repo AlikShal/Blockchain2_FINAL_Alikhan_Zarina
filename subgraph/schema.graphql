@@ -1,4 +1,4 @@
-type Asset @entity {
+type Asset @entity(immutable: false)  {
   id: ID!
   issuer: Bytes!
   reserveAsset: Bytes!
@@ -11,7 +11,7 @@ type Asset @entity {
   createdAtTimestamp: BigInt!
 }
 
-type VaultPosition @entity {
+type VaultPosition @entity(immutable: false)  {
   id: ID!
   user: Bytes!
   vault: Bytes!
@@ -21,7 +21,7 @@ type VaultPosition @entity {
   updatedAtTimestamp: BigInt!
 }
 
-type Proposal @entity {
+type Proposal @entity(immutable: false)  {
   id: ID!
   proposalId: BigInt!
   proposer: Bytes!
@@ -34,7 +34,7 @@ type Proposal @entity {
   createdAtTimestamp: BigInt!
 }
 
-type Vote @entity {
+type Vote @entity(immutable: false)  {
   id: ID!
   proposal: Proposal!
   voter: Bytes!
@@ -45,7 +45,7 @@ type Vote @entity {
   createdAtTimestamp: BigInt!
 }
 
-type Swap @entity {
+type Swap @entity(immutable: false)  {
   id: ID!
   trader: Bytes!
   amountIn: BigInt!

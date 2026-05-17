@@ -1,6 +1,6 @@
 import { createConfig, http } from 'wagmi';
 import { injected } from 'wagmi/connectors';
-import { baseSepolia, foundry } from 'wagmi/chains';
+import { baseSepolia, foundry, sepolia } from 'wagmi/chains';
 
 const configuredChain = (
   import.meta.env.VITE_CHAIN || 'baseSepolia'
@@ -9,7 +9,9 @@ const configuredChain = (
 export const expectedChain =
   configuredChain === 'anvil' || configuredChain === 'foundry'
     ? foundry
-    : baseSepolia;
+    : configuredChain === 'sepolia'
+      ? sepolia
+      : baseSepolia;
 
 export const appConfig = createConfig({
   chains: [expectedChain],
