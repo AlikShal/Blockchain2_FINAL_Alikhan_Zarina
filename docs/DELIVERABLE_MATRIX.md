@@ -12,10 +12,8 @@
 | Gas report | `reports/gas/gas-report.md` | Done |
 | Coverage report | `reports/coverage/coverage.md` | Done |
 | README | `README.md` | Done |
-| L2 verified addresses | Not yet committed | Pending external deployment |
+| L2 verified addresses | `docs/deployment/addresses.md` | Done |
 | Final slide deck PDF | Not in repo | Pending manual presentation work |
-
-## Current Gaps That Still Need External Execution
 
 The following items cannot be truthfully completed without running against a live L2 environment:
 
@@ -24,3 +22,12 @@ The following items cannot be truthfully completed without running against a liv
 - Publishing the subgraph with real addresses
 - Capturing final L1 vs L2 gas comparison for live deployments
 - Preparing and exporting the slide deck PDF
+
+
+## Final External Evidence
+
+- Base Sepolia deployment completed.
+- Contracts verified on BaseScan.
+- Subgraph published with live Base Sepolia addresses.
+- L1 vs L2 gas comparison captured.
+- Final presentation exported as PDF.
